@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meteo per {{ city }}</title>
+    <style>
+        body { 
+            font-family: Arial, sans-serif; 
+            margin: 20px; 
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            min-height: 100vh;
+        }
+        .weather { 
+            border: 1px solid #ccc; 
+            padding: 20px; 
+            border-radius: 8px; 
+            max-width: 400px; 
+            background-color: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(5px);
+        }
+        .error { color: red; }
+        .legend { 
+            margin-top: 20px; 
+            max-width: 600px; 
+            background-color: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(5px);
+            padding: 20px;
+            border-radius: 8px;
+        }
+        .legend table { width: 100%; border-collapse: collapse; }
+        .legend th, .legend td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+        .legend th { background-color: #f2f2f2; }
+        h1 { color: #333; text-shadow: 1px 1px 2px rgba(255,255,255,0.8); }
+    </style>
+</head>
+<body>
+    <h1>Meteo per {{ city }}</h1>
+    {% if weather %}
+    <div class="weather">
+        <p><strong>Temperatura:</strong> {{ weather.temperature }}°C</p>
+        <p><strong>Velocità del vento:</strong> {{ weather.windspeed }} km/h</p>
+        <p><strong>Umidità:</strong> {{ weather.humidity }}%</p>
+        <p><strong>Precipitazioni:</strong> {{ weather.precipitation }} mm</p>
+        <p><strong>Condizioni meteo:</strong> {{ weather_description }}</p>
+    </div>
+    {% else %}
+    <p class="error">Errore: {{ error }}</p>
+    {% endif %}
+    
+    <a href="/">Torna alla home</a>
+
+    <script>
+        // Passa il codice meteo da Jinja a JavaScript
+        const weatherCode = {{ weather.weathercode if weather else 0 }};
+        console.log('Weather code ricevuto:', weatherCode);
+
+        // Mappa dei codici meteo alle parole chiave per la ricerca immagini
+        const weatherKeywords = {
+            0: 'clear sky blue',
+            1: 'mostly clear sky',
+            2: 'fog',
+            3: 'overcast cloudy sky',
+            45: 'fog misty landscape',
+            48: 'fog frost landscape',
+            51: 'light drizzle rain',
+            53: 'moderate drizzle rain',
+            55: 'dense drizzle rain',
+            56: 'light freezing drizzle',
+            57: 'dense freezing drizzle',
+            61: 'light rain weather',
+            63: 'moderate rain weather',
+            65: 'heavy rain weather',
+            66: 'light freezing rain',
+            67: 'dense freezing rain',
+            71: 'light snow winter',
+            73: 'moderate snow winter',
+            75: 'heavy snow winter',
+            77: 'snow grains winter',
+            80: 'light rain shower',
+            81: 'moderate rain shower',
+            82: 'heavy rain shower',
+            85: 'light snow shower',
+            86: 'heavy snow shower',
+            95: 'thunderstorm storm',
+            96: 'thunderstorm hail',
+            99: 'thunderstorm heavy hail'
+        };
+
+        // Funzione per impostare lo sfondo
+        function setWeatherBackground(code) {
+            console.log('Impostando sfondo per codice:', code);
+            const keyword = weatherKeywords[code] || 'weather landscape';
+            console.log('Parola chiave selezionata:', keyword);
+            
+            // Usa un URL Picsum stabile basato sul codice meteo per prova
+            const seed = encodeURIComponent(keyword.replace(/\s+/g, '-'));
+            const imageUrl = `https://picsum.photos/seed/${seed}/1920/1080`;
+            console.log('URL immagine:', imageUrl);
+            
+            // Imposta lo sfondo con fallback
+            document.body.style.backgroundImage = `url('${imageUrl}')`;
+            document.body.style.backgroundRepeat = 'no-repeat';
+            document.body.style.backgroundSize = 'cover';
+            document.body.style.backgroundPosition = 'center';
+            console.log('Background-image impostato:', document.body.style.backgroundImage);
+            
+            // Test immediato se l'immagine carica
+            const img = new Image();
+            img.onload = function() {
+                console.log('Immagine caricata con successo');
+            };
+            img.onerror = function() {
+                console.log('Errore nel caricamento immagine');
+                // Fallback immediato
+                document.body.style.backgroundImage = 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)';
+            };
+            img.src = imageUrl;
+            
+            // Aggiungi un timeout per il fallback se l'immagine non carica
+            setTimeout(() => {
+                console.log('Controllo timeout - background attuale:', document.body.style.backgroundImage);
+                if (!document.body.style.backgroundImage || document.body.style.backgroundImage === 'none') {
+                    console.log('Applicando fallback per timeout');
+                    document.body.style.backgroundImage = 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)';
+                }
+            }, 5000);
+        }
+
+        // Imposta lo sfondo quando la pagina carica
+        if (weatherCode !== undefined) {
+            console.log('Avviando setWeatherBackground');
+            setWeatherBackground(weatherCode);
+        } else {
+            console.log('WeatherCode undefined');
+        }
+    </script>
+</body>
+</html>
