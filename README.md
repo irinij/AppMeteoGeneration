@@ -25,6 +25,7 @@ L'applicazione utilizza le seguenti API esterne gratuite:
 
 ## Istruzioni di installazione
 1. **Clona o scarica il progetto**: Assicurati di avere il codice sorgente nella tua directory locale.
+   Da Powershell: git clone https://github.com/irinij/AppMeteoGeneration.git
 
 2. **Crea un ambiente virtuale** (opzionale ma raccomandato): da riga di comando, digita:
    ```
