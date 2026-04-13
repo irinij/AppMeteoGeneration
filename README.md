@@ -25,9 +25,10 @@ L'applicazione utilizza le seguenti API esterne gratuite:
 
 ## Istruzioni di installazione
 1. **Clona o scarica il progetto**: Assicurati di avere il codice sorgente nella tua directory locale.
-   Da Powershell: git clone https://github.com/irinij/AppMeteoGeneration.git
+2. Da Powershell: git clone https://github.com/irinij/AppMeteoGeneration.git
+3. cd AppMeteoGeneration
 
-2. **Crea un ambiente virtuale** (opzionale ma raccomandato): da riga di comando, digita:
+4. **Crea un ambiente virtuale** (opzionale ma raccomandato): da riga di comando, digita:
    ```
    python -m venv .venv
    # Su Windows:
@@ -36,12 +37,12 @@ L'applicazione utilizza le seguenti API esterne gratuite:
    source .venv/bin/activate
    ```
 
-3. **Installa le dipendenze**:
+5. **Installa le dipendenze**:
    ```
    pip install -r requirements.txt
    ```
 
-4. **Verifica l'installazione**:
+6. **Verifica l'installazione**:
    ```
    python -c "import fastapi, requests; print('Dipendenze installate correttamente')"
    ```
